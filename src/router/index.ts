@@ -1,3 +1,4 @@
+import { characterRoute } from '@/characters/routes';
 import AboutPage from '@/shared/pages/AboutPage.vue';
 import HomePage from '@/shared/pages/HomePage.vue';
 import {
@@ -5,9 +6,6 @@ import {
   createWebHistory,
   type RouteRecordRaw,
 } from 'vue-router';
-
-const CharacterLayout = () =>
-  import('@/characters/layouts/CharacterLayout.vue');
 
 const routes: RouteRecordRaw[] = [
   // public
@@ -22,11 +20,9 @@ const routes: RouteRecordRaw[] = [
     component: AboutPage,
   },
   // characters
-  {
-    path: '/characters',
-    name: 'characters',
-    component: CharacterLayout,
-  },
+  // path: '/characters'
+  characterRoute,
+
   // default
   { path: '/:pathMatch(.*)*', redirect: () => ({ name: 'home' }) },
 ];

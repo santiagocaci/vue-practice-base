@@ -6,9 +6,9 @@ import { routerLinks } from './router/routeLink';
 <template>
   <div>
     <header>
-      <BaseNavbar :links="routerLinks" />
+      <BaseNavbar :links="routerLinks" title="BreakingApp" />
     </header>
-    <main>
+    <main class="max-w-5xl mx-auto">
       <RouterView />
     </main>
   </div>
