@@ -1,9 +1,5 @@
 <script setup lang="ts">
 import type { RouterLink } from '@/router/routeLink';
-import { useRoute } from 'vue-router';
-
-const route = useRoute();
-console.log(route.path);
 
 type Props = {
   links: RouterLink[];
