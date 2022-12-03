@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Character } from '@/characters/types/character';
-import { toRef, toRefs } from 'vue';
+import { toRef } from 'vue';
 
 type Props = {
   character: Character;

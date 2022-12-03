@@ -5,4 +5,21 @@ import router from './router';
 
 import './style.css';
 
-createApp(App).use(VueQueryPlugin).use(router).mount('#app');
+const app = createApp(App);
+
+VueQueryPlugin.install(app, {
+  queryClientConfig: {
+    defaultOptions: {
+      queries: {
+        cacheTime: 1000 * 120,
+        refetchOnReconnect: 'always',
+      },
+    },
+  },
+});
+
+app.use(router);
+
+app.mount('#app');
+
+// createApp(App).use(VueQueryPlugin).use(router).mount('#app');
