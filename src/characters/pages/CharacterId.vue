@@ -1,39 +1,26 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
-import { useQuery } from '@tanstack/vue-query';
-import characterStore from '@/store/characters.store';
-import { breakingBadApi } from '@/api';
-import type { Character } from '@/characters/types/character';
+import { watchEffect } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import useCharacter from '@/characters/composables/useCharacter';
 
 const route = useRoute();
+const router = useRouter();
 
 const { id } = route.params as { id: string };
 
-const getCharacterByIdCacheFirst = async (
-  characterId: string
-): Promise<Character> => {
-  if (characterStore.checkIdInStore(characterId)) {
-    return characterStore.ids.list[characterId];
-  }
+const { character, isError, errorMessage, isLoading } = useCharacter(id);
 
-  const data = await breakingBadApi.getCharacterById(characterId);
-  return data[0];
-};
-
-const { data: character } = useQuery(
-  ['characters', id],
-  () => getCharacterByIdCacheFirst(id),
-  {
-    onSuccess(character) {
-      characterStore.loadedCharacter(character);
-    },
+watchEffect(() => {
+  if (!isLoading.value && isError.value) {
+    router.replace('/characters');
   }
-);
+});
 </script>
 <template>
   <div class="mx-4 sm:mx-24">
-    <h1 v-if="!character">Loading...</h1>
-    <template v-else>
+    <h1 v-if="isLoading">Loading...</h1>
+    <h1 v-else-if="isError">{{ errorMessage }}</h1>
+    <template v-else-if="character">
       <div
         class="flex flex-col md:flex-row items-center md:justify-start gap-2 md:gap-6"
       >
