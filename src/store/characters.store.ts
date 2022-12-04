@@ -10,10 +10,20 @@ type Store = {
     isError: boolean;
     errorMessage: string | null;
   };
+  ids: {
+    isLoading: boolean;
+    isError: boolean;
+    errorMessage: string | null;
+    list: { [id: string]: Character };
+  };
 
   startLoadingCharacters: () => void;
   loadedCharacters: (data: Character[]) => void;
   loadedCharacterFailed: (error: string) => void;
+
+  startLoadingCharacter: () => void;
+  checkIdInStore: (id: string) => boolean;
+  loadedCharacter: (character: Character) => void;
 };
 
 const characterStore = reactive<Store>({
@@ -23,6 +33,13 @@ const characterStore = reactive<Store>({
     isError: false,
     isLoading: true,
     list: [],
+  },
+
+  ids: {
+    errorMessage: null,
+    isError: false,
+    isLoading: true,
+    list: {},
   },
 
   async startLoadingCharacters() {
@@ -44,7 +61,6 @@ const characterStore = reactive<Store>({
     if (typeof data === 'string' && data.startsWith('<!doctype')) {
       return this.loadedCharacterFailed('the answer is not a character array');
     }
-
     const newData: Character[] = structuredClone(data);
     this.characters = {
       ...this.characters,
@@ -52,6 +68,31 @@ const characterStore = reactive<Store>({
       isLoading: false,
       list: newData,
     };
+  },
+
+  checkIdInStore(id: string) {
+    return !!this.ids.list[id];
+  },
+
+  startLoadingCharacter() {
+    this.ids = {
+      ...this.ids,
+      isLoading: true,
+      isError: false,
+      errorMessage: null,
+    };
+  },
+  loadedCharacter(character: Character) {
+    this.ids = {
+      ...this.ids,
+      isLoading: false,
+      list: {
+        ...this.ids.list,
+        [character.char_id]: character,
+      },
+    };
+    // this.ids.isLoading = false;
+    // this.ids.list[character.char_id] = character;
   },
 });
 

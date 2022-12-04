@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { Character } from '@/characters/types/character';
 import { toRef } from 'vue';
+import { useRouter } from 'vue-router';
+import type { Character } from '@/characters/types/character';
 
 type Props = {
   character: Character;
@@ -8,14 +9,19 @@ type Props = {
 
 const props = defineProps<Props>();
 
+const router = useRouter();
 const character = toRef(props, 'character');
 
 const isAlive = () => character.value.status === 'Alive';
 const isDead = () => character.value.status === 'Deceased';
+
+const goTo = () => {
+  router.push(`by/${character.value.char_id}`);
+};
 </script>
 
 <template>
-  <div class="card w-72 bg-base-300 glass">
+  <div class="card w-72 bg-base-300 glass hover:cursor-pointer" @click="goTo">
     <figure>
       <img
         class="object-cover object-top w-full h-80"
